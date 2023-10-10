@@ -1,0 +1,42 @@
+<form [formGroup]="formGroup" class="container">
+  <mat-card class="card">
+    <mat-card-content>
+      <mat-form-field class="field">
+        <mat-label>Дата:</mat-label>
+        <input
+          [min]="minDate"
+          matInput
+          formControlName="date"
+          [matDatepicker]="datepicker"
+          (click)="datepicker.open()"
+          readonly
+        />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="datepicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #datepicker></mat-datepicker>
+      </mat-form-field>
+
+      <div formArrayName="conditions" class="conditions-container">
+        <mat-label></mat-label>
+        <div *ngFor="let group of conditionsFormGroup.controls">
+          <app-diagnose-field [group]="group"></app-diagnose-field>
+        </div>
+        <button mat-icon-button (click)="addField()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <div class="convert-btn">
+        <button class="full-width" mat-raised-button (click)="onSubmit()">
+          Сформувати JSON
+        </button>
+      </div>
+      <div>
+        <mat-form-field class="full-width">
+          <textarea matInput [formControl]="data" readonly></textarea>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</form>

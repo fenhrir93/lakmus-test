@@ -1,0 +1,24 @@
+<div [formGroup]="group" class="conditions">
+  <mat-form-field>
+    <input
+      matInput
+      formControlName="condition"
+      [matAutocomplete]="auto"
+      (keyup)="search($event.target['value'])"
+    />
+    <mat-autocomplete
+      autoActiveFirstOption
+      #auto="matAutocomplete"
+      [displayWith]="getOptionName"
+    >
+      <mat-option [value]=""></mat-option>
+      <mat-option *ngFor="let option of diagnoses$ | async" [value]="option">
+        {{ option.name }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Коментарі:</mat-label>
+    <input matInput formControlName="notes" />
+  </mat-form-field>
+</div>
