@@ -1,24 +1,15 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-export interface Diagnose {
-  blockName: string;
-  blockNumber: string;
-  chapterName: string;
-  chapterNumber: null;
-  code: string;
-  id: number;
-  isPublic: boolean;
-  name: string;
-  shortName: string;
-}
+import { Diagnosis } from 'src/app/models/Diagnosis.interface';
+
 @Injectable()
-export class DiagnoseHttpService {
+export class DiagnosisHttpService {
   private apiUrl = `http://localhost:3000/`;
 
   constructor(private http: HttpClient) {}
 
   getDiagnoses() {
-    return this.http.get<Diagnose[]>(this.apiUrl);
+    return this.http.get<Diagnosis[]>(this.apiUrl);
   }
 
   search(searchTerm = 'Ост') {
@@ -27,6 +18,6 @@ export class DiagnoseHttpService {
       params = params.set('Search', searchTerm);
     }
 
-    return this.http.get<Diagnose[]>(this.apiUrl, { params });
+    return this.http.get<Diagnosis[]>(this.apiUrl, { params });
   }
 }

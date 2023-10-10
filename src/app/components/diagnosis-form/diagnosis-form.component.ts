@@ -13,26 +13,17 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
-import { Diagnose, DiagnoseHttpService } from './diagnose-http.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { DiagnoseSequelizeService } from './diagnoseSequelize.service';
+import { DiagnoseSequelizeService as DiagnosisSequelizeService } from './diagnosisSequelize.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { Subject } from 'rxjs';
-import { DiagnoseFieldComponent } from './diagnose-field/diagnose-field.component';
-
-export interface Condition {
-  condition: Diagnose;
-  notes: string;
-}
-
-export interface Data {
-  conditions: Condition[];
-  date: string;
-}
+import { DiagnosisFieldComponent } from './diagnosis-field/diagnosis-field.component';
+import { Diagnosis } from 'src/app/models/Diagnosis.interface';
+import { ConditionData } from 'src/app/models/ConditionData.itnerface';
 
 @Component({
-  selector: 'app-diagnose-form',
+  selector: 'app-diagnosis-form',
   standalone: true,
   imports: [
     CommonModule,
@@ -47,13 +38,13 @@ export interface Data {
     MatNativeDateModule,
     HttpClientModule,
     MatAutocompleteModule,
-    DiagnoseFieldComponent,
+    DiagnosisFieldComponent,
   ],
-  templateUrl: './diagnose-form.component.html',
-  styleUrls: ['./diagnose-form.component.css'],
-  providers: [DiagnoseSequelizeService],
+  templateUrl: './diagnosis-form.component.html',
+  styleUrls: ['./diagnosis-form.component.css'],
+  providers: [DiagnosisSequelizeService],
 })
-export class DiagnoseFormComponent implements OnInit {
+export class DiagnosisFormComponent implements OnInit {
   conditionsFormGroup = this.fB.array<FormGroup>([]);
   formGroup = this.fB.group({
     date: '',
@@ -63,11 +54,11 @@ export class DiagnoseFormComponent implements OnInit {
 
   readonly minDate = new Date();
 
-  diagnoses$ = new Subject<Diagnose[]>();
+  diagnoses$ = new Subject<Diagnosis[]>();
 
   constructor(
     private fB: FormBuilder,
-    private sequelizer: DiagnoseSequelizeService
+    private sequelizer: DiagnosisSequelizeService
   ) {}
 
   ngOnInit(): void {
@@ -83,7 +74,7 @@ export class DiagnoseFormComponent implements OnInit {
   }
 
   onSubmit() {
-    const data: Data = {
+    const data: ConditionData = {
       date: this.formGroup.value.date,
       conditions: this.formGroup.value.conditions,
     };
@@ -94,7 +85,7 @@ export class DiagnoseFormComponent implements OnInit {
     return o1.name === o2.name && o1.id === o2.id;
   }
 
-  trackByFn(index, item) {
+  trackByFn(_index: number, item: { id: number | string }) {
     return item.id;
   }
 

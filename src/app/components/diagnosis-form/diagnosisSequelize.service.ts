@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Condition, Data } from './diagnose-form.component';
-import { NonNullAssert } from '@angular/compiler';
+import { ConditionData } from 'src/app/models/ConditionData.itnerface';
+import { guuId } from 'src/app/utils/guuid';
 
 @Injectable()
 export class DiagnoseSequelizeService {
-  sequelizeData({ date, conditions }: Data) {
+  sequelizeData({ date, conditions }: ConditionData) {
     const formattedData = {
       encounter: {
         date,
@@ -35,7 +35,7 @@ export class DiagnoseSequelizeService {
     }
 
     return {
-      id: this.generateUuid(),
+      id: guuId(),
       context: {
         identifier: {
           type: {
@@ -60,13 +60,5 @@ export class DiagnoseSequelizeService {
       notes: condition.notes ?? '',
       onset_date: new Date(),
     };
-  }
-
-  private generateUuid() {
-    return 'xxxxxxxx-xxxx-xxxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = (Math.random() * 16) | 0;
-      const v = c === 'x' ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
   }
 }

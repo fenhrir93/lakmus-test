@@ -4,7 +4,7 @@
       matInput
       formControlName="condition"
       [matAutocomplete]="auto"
-      (keyup)="search($event.target['value'])"
+      (keyup)="search($event)"
     />
     <mat-autocomplete
       autoActiveFirstOption
@@ -12,7 +12,7 @@
       [displayWith]="getOptionName"
     >
       <mat-option [value]=""></mat-option>
-      <mat-option *ngFor="let option of diagnoses$ | async" [value]="option">
+      <mat-option *ngFor="let option of diagnosis$ | async" [value]="option">
         {{ option.name }}
       </mat-option>
     </mat-autocomplete>

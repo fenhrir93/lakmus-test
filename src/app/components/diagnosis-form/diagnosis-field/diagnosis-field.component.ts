@@ -16,9 +16,10 @@ import {
   take,
   takeUntil,
 } from 'rxjs';
-import { Diagnose, DiagnoseHttpService } from '../diagnose-http.service';
+import { DiagnosisHttpService } from '../diagnosis-http.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { Diagnosis } from 'src/app/models/Diagnosis.interface';
 
 @Component({
   selector: 'app-diagnose-field',
@@ -35,18 +36,18 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatNativeDateModule,
     MatAutocompleteModule,
   ],
-  templateUrl: './diagnose-field.component.html',
-  styleUrls: ['./diagnose-field.component.css'],
-  providers: [HttpClientModule, DiagnoseHttpService],
+  templateUrl: './diagnosis-field.component.html',
+  styleUrls: ['./diagnosis-field.component.css'],
+  providers: [HttpClientModule, DiagnosisHttpService],
 })
-export class DiagnoseFieldComponent implements OnInit, OnDestroy {
-  @Input() group: FormGroup;
+export class DiagnosisFieldComponent implements OnInit, OnDestroy {
+  @Input() group = new FormGroup({});
 
-  diagnoses$ = new Subject<Diagnose[]>();
+  diagnosis$ = new Subject<Diagnosis[]>();
   private destroyed$ = new Subject<void>();
   private searchInputSubject = new Subject<string>();
 
-  constructor(private diagnoseHttpService: DiagnoseHttpService) {}
+  constructor(private diagnoseHttpService: DiagnosisHttpService) {}
 
   ngOnInit(): void {
     this.setDiagnoses();
@@ -58,15 +59,20 @@ export class DiagnoseFieldComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 
-  search(value: string) {
+  search(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const value = target.value;
+    if (!value) {
+      return;
+    }
     this.searchInputSubject.next(value);
   }
 
-  getOptionName(option: any): string {
+  getOptionName(option: { name: string }): string {
     return option ? option.name : '';
   }
 
-  trackByFn(index, item) {
+  trackByFn(_index: number, item: { id: number | string }) {
     return item.id;
   }
 
@@ -76,13 +82,13 @@ export class DiagnoseFieldComponent implements OnInit, OnDestroy {
         debounceTime(300),
         distinctUntilChanged(),
         switchMap((value: string) => {
-          this.search(value);
+          this.searchInputSubject.next(value);
           return this.diagnoseHttpService.search(value);
         }),
         takeUntil(this.destroyed$)
       )
       .subscribe((data) => {
-        this.diagnoses$.next(data);
+        this.diagnosis$.next(data);
       });
   }
 
@@ -90,6 +96,6 @@ export class DiagnoseFieldComponent implements OnInit, OnDestroy {
     this.diagnoseHttpService
       .getDiagnoses()
       .pipe(take(1))
-      .subscribe((diagnoses) => this.diagnoses$.next(diagnoses));
+      .subscribe((diagnoses) => this.diagnosis$.next(diagnoses));
   }
 }

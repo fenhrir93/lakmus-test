@@ -19,7 +19,7 @@
       </mat-form-field>
 
       <div formArrayName="conditions" class="conditions-container">
-        <mat-label></mat-label>
+        <mat-label>Діагнози за ICPC-2</mat-label>
         <div *ngFor="let group of conditionsFormGroup.controls">
           <app-diagnose-field [group]="group"></app-diagnose-field>
         </div>
