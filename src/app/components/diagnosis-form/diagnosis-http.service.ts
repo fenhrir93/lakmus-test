@@ -12,11 +12,9 @@ export class DiagnosisHttpService {
     return this.http.get<Diagnosis[]>(this.apiUrl);
   }
 
-  search(searchTerm = 'Ост') {
+  search(_searchTerm = 'Ост') {
     let params = new HttpParams();
-    if (searchTerm) {
-      params = params.set('Search', searchTerm);
-    }
+    params = params.set('Search', _searchTerm);
 
     return this.http.get<Diagnosis[]>(this.apiUrl, { params });
   }
