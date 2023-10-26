@@ -74,9 +74,10 @@ export class DiagnosisFormComponent implements OnInit {
   }
 
   onSubmit() {
+    const { date, conditions } = this.formGroup.value;
     const data: ConditionData = {
-      date: this.formGroup.value.date,
-      conditions: this.formGroup.value.conditions,
+      date,
+      conditions,
     };
     this.data.setValue(JSON.stringify(this.sequelizer.sequelizeData(data)));
   }

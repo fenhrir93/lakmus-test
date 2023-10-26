@@ -82,7 +82,6 @@ export class DiagnosisFieldComponent implements OnInit, OnDestroy {
         debounceTime(300),
         distinctUntilChanged(),
         switchMap((value: string) => {
-          this.searchInputSubject.next(value);
           return this.diagnoseHttpService.search(value);
         }),
         takeUntil(this.destroyed$)
